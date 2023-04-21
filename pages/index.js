@@ -1,18 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";;
+import { useRouter } from "next/router";
 import Layout from "../components/Layout";
 import { locations, prices, categories, skills } from "../helpers/filters";
 import HeroSection from "@/components/HeroSection";
 import FreelanceCategories from "@/components/FreelanceCategories";
 import FiltersDisplay from "../components/FiltersDisplay";
 import SortDisplay from "@/components/SortDisplay";
-import useFilters from "../hooks/useFilters"; 
+import useFilters from "../hooks/useFilters";
 import UserCards from "@/components/UserCards";
 import RenderState from "@/components/RenderState";
 
 export default function Home() {
   const router = useRouter();
-  const { filter, categoryHandler, locationHandler, sortHandler, priceHandler, searchHandler, skillsHandler } = useFilters(); // call your custom hook here
+  const {
+    filter,
+    categoryHandler,
+    locationHandler,
+    sortHandler,
+    priceHandler,
+    searchHandler,
+    skillsHandler,
+  } = useFilters(); // call your custom hook here
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -69,10 +77,14 @@ export default function Home() {
           skills={skills}
         />
         <SortDisplay users={users} sort={sort} sortHandler={sortHandler} />
-        <RenderState error={error} loading={loading} users={users} message={ <p>
-          No services found that match your search. Why not try a different
-          keyword or category?
-        </p>}/>
+        <RenderState
+          error={error}
+          loading={loading}
+          users={users}
+          message="No services found that match your search. Why not try a different
+          keyword or category?"
+        />
+
         {users ? <UserCards users={users} /> : null}
         <div className="mt-auto flex justify-center mb-24"></div>
       </div>

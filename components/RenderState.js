@@ -3,7 +3,7 @@ const RenderState = ({ error, loading, users, message }) => {
     return <>{error}</>;
   } else if (loading) {
     return <>Loading...</>;
-  } else if (users?.length === 0) {
+  } else if (!users || users.length === 0) {
     return (
       <>
         <p>{message}</p>
