@@ -1,4 +1,13 @@
-const LoginForm = ({ handleSubmit, errRef, errMsg, userRef, setUsername, username, setPassword, password}) => {
+const LoginForm = ({
+  handleSubmit,
+  errRef,
+  errMsg,
+  userRef,
+  setUsername,
+  username,
+  setPassword,
+  password,
+}) => {
   return (
     <form
       className="bg-white shadow-md rounded pt-8 pb-8 mb-4 mt-6 px-4 sm:px-8"

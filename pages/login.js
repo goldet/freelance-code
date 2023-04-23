@@ -1,7 +1,9 @@
 import Layout from "../components/Layout";
 import LoginForm from "@/components/LoginForm";
-import LoginFormHeading from "@/components/LoginFormHeading";
 import useLogin from "@/hooks/useLogin";
+import AuthFormHeading from "@/components/AuthFormHeading";
+import PageContainer from "@/components/PageContainer";
+
 
 export default function Login() {
   const {
@@ -18,8 +20,8 @@ export default function Login() {
   return (
     <Layout navTwo={true}>
       <section>
-        <div className="w-full max-w-lg mx-auto mb-24">
-          <LoginFormHeading />
+        <PageContainer>
+          <AuthFormHeading title="Sign into your account" isRegister={false}/>
           <LoginForm
             handleSubmit={handleSubmit}
             errRef={errRef}
@@ -30,7 +32,7 @@ export default function Login() {
             setPassword={setPassword}
             password={password}
           />
-        </div>
+        </PageContainer>  
       </section>
     </Layout>
   );
