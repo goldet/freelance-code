@@ -4,8 +4,6 @@ const db = require("@/server/helper");
 // PATCH request to update an existing user in user_table
 export async function updateUserById(req, res) {
   const id = req.query.id;
-
-
   try {
     const response = await db(`SELECT * FROM user_table, services WHERE user_table.user_id = services.user_id AND user_table.user_id = ${id}`);
     const user = response.data[0];

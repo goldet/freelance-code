@@ -1,95 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import Layout from "@/components/Layout";
+import PageContainer from "@/components/PageContainer";
+import useEditProfile from "@/hooks/useEditProfile";
 
-const BASE_URL = "http://localhost:3000";
 
 const EditProfile = () => {
-  const router = useRouter();
-  const { id } = router.query;
-  const [user, setUser] = useState(null);
-  const [tempProfile, setTempProfile] = useState();
-  const [changed, setChanged] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-  const [error, setError] = useState("Sorry an error has occurred");
-
-  const categories = [
-    { name: "Full Stack", id: 1 },
-    { name: "Data Science", id: 2 },
-    { name: "Product Management", id: 3 },
-  ];
-
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const response = await fetch(`${BASE_URL}/api/users/userdetail/${id}`, {
-          method: "GET",
-        });
-        const user = await response.json();
-        setUser(user);
-        setTempProfile(user);
-      } catch (error) {
-        setError(error);
-      }
-    };
-    getUser();
-  }, [id]);
-
-  const updateProfile = async (user_id) => {
-    try {
-      // Update user details
-      await fetch(`${BASE_URL}/api/users/userdetail/${user_id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(tempProfile),
-      });
-
-      // Upload avatar if changed
-      if (changed) {
-        const formData = new FormData();
-        formData.append("file", tempProfile.avatar);
-
-        await fetch(`${BASE_URL}/api/uploads/${user_id}`, {
-          method: "POST",
-          body: formData,
-        });
-      }
-
-      if (tempProfile.resume) {
-        const formData = new FormData();
-        formData.append("file", tempProfile.resume);
-
-        await fetch(`${BASE_URL}/api/documentuploads/${user_id}`, {
-          method: "POST",
-          body: formData,
-        });
-      }
-
-      // Route to other page
-      handleUpdateSuccess();
-      router.push({
-        pathname: "/dashboard",
-        query: { successMessage: "Your details have been updated" },
-      });
-    } catch (error) {
-      setError(error);
-    }
-  };
-
-  const handleUpdateSuccess = () => {
-    setSuccessMessage("Your details have been updated");
-  };
-
-  const goBack = () => {
-    router.push("/dashboard");
-  };
+  const {
+    categories,
+    user,
+    updateProfile,
+    tempProfile,
+    setTempProfile,
+    goBack,
+    changed,
+    setChanged,
+  } = useEditProfile();
 
   return (
     <Layout>
       {user && tempProfile ? (
-        <div className="w-full max-w-xl mx-auto mb-24">
+        <PageContainer>
           <div className="px-4 sm:px-0">
             <h2 className="text-2xl font-light mb-4 text-coBlue mt-8 sm:text-3xl">
               Edit your profile
@@ -450,17 +379,20 @@ const EditProfile = () => {
               <div>
                 {tempProfile.resume ? (
                   <iframe
-                    src={tempProfile.resume}
+                    src={
+                      typeof tempProfile.resume === "string"
+                        ? tempProfile.resume
+                        : URL.createObjectURL(tempProfile.resume)
+                    }
                     alt="resume"
                     className="h-16 w-16"
                   />
-                ) : null}{" "}
+                ) : null}
               </div>
               <div>
                 <input
                   type="file"
                   name="resume"
-                  /*  accept="/*" */
                   onChange={(e) => {
                     setChanged(true);
                     setTempProfile({
@@ -500,7 +432,7 @@ const EditProfile = () => {
               </button>
             )}
           </div>
-        </div>
+          </PageContainer>
       ) : null}
     </Layout>
   );
